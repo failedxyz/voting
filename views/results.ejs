@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<title>Results</title>
+		<% include header %>
+	</head>
+	<body>
+		<div id="panel">
+			<h1>Results for <%- title %></h1>
+			<p><a href="/p/<%- id %>">Permalink</a></p>
+			<form action="/p/<%- id %>/vote" method="POST" class="form-horizontal">
+				<p>Options:</p>
+				<div id="options" style="text-align:left;">
+					<!-- <%- JSON.stringify(options) %> -->
+					<% for(var i=0; i<options.length; i++) { var option = options[i]; %>
+						<p><%- option["option"] %> (<%- option["votes"] %> votes)</p>
+					<% } %>
+				</div>
+				<p></p>
+				<div id="chart"></div>
+			</form>
+		</div>
+		<script>
+			var option = $("#options div").clone();
+			var add_option = function() {
+				option.appendTo("#options");
+				option = $("#options div:first-child").clone();
+			}
+			
+			var objects = <%- JSON.stringify(options) %>;
+			
+			var columns = [
+				<% for(var i=0; i<options.length; i++) { var option = options[i]; %>
+					<%- "[" + JSON.stringify(option["option"]) + "," + option["votes"] + "],"  %>
+				<% } %>
+			];
+			
+			var chart = c3.generate({
+				data: {
+					columns: columns,
+					type : "pie",
+				}
+			});
+			
+			var print_options = function() {
+				var html = "";
+				for (var i=0; i<objects.length; i++) {
+					html += "<p>" + objects[i]["option"] + " (" + objects[i]["votes"] + " votes)</p>";
+				}
+				$("#options").html(html);
+				console.log("UPDATED TO " + html);
+			};
+			
+			$(document).ready(function() {
+				var socket = io(location.origin + "/");
+				socket.on("poll<%- id %>", function(option) {
+					console.log(option);
+					for(var i=0; i<objects.length; i++) {
+						if (option == objects[i]["option"]) {
+							objects[i]["votes"] += 1;
+						}
+					}
+					objects.sort(function(a, b) {
+						return b["votes"] - a["votes"];
+					});
+					console.log(objects);
+					print_options();
+					for(var i=0; i<columns.length; i++) {
+						if (option == columns[i][0]) {
+							columns[i][1] += 1;
+						}
+					}
+					columns.sort(function(a, b) {
+						return b[1] - a[1];
+					});
+					/*for(var i=0; i<objects.length; i++) {
+						chart.unload({ ids: objects[i]["option"] });
+					}*/
+					chart.load({ columns: columns });
+				});
+			});
+		</script>
+	</body>
+</html>

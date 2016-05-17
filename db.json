@@ -1,0 +1,28 @@
+{
+  "polls": [
+    {
+      "id": 1,
+      "title": "hei",
+      "options": [
+        "asdf"
+      ],
+      "votes": {
+        "lizhang6": "0",
+        "jhwang6": "0"
+      }
+    },
+    {
+      "id": 2,
+      "title": "vote",
+      "options": [
+        "o1",
+        "o2"
+      ],
+      "votes": {
+        "lizhang6": 0,
+        "jhwang6": 1,
+        "jzhang6": 0
+      }
+    }
+  ]
+}

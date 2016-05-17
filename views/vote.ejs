@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>Vote</title>
+		<% include header %>
+	</head>
+	<body>
+		<div id="panel">
+			<h1>Voting on <%- title %></h1>
+			<div id="error" style="display:none"><div class="alert alert-danger"></div></div>
+			<form action="/p/<%- id %>/vote" method="POST" class="form-horizontal">
+				<p><input type="text" placeholder="Username" name="user" class="form-control" autocomplete="off" autofocus></p>
+				<p><input type="password" placeholder="Password" name="pass" class="form-control" autocomplete="off" autofocus></p>
+				<p>Choose an option:</p>
+				<div id="options" style="text-align:left;">
+					<% for(var i=0; i<options.length; i++) { var option = options[i]; %>
+						<p><input type="radio" name="choice" value="<%- i %>" id="choice<%- i %>" /><label for="choice<%- i %>"><%- option %></label></p>
+					<% } %>
+				</div>
+				<p></p>
+				<p>
+					<button type="submit" class="btn btn-success">Vote <i class="fa fa-check"></i></button>
+				</p>
+			</form>
+		</div>
+		<script>
+			var option = $("#options div").clone();
+			var add_option = function() {
+				option.appendTo("#options");
+				option = $("#options div:first-child").clone();
+			}
+			if (location.search.length > 1 && location.search.indexOf("error=") > 0) {
+				$("#error > div").html(decodeURIComponent(location.search.split("error=")[1]));
+				$("#error").slideDown();
+			}
+		</script>
+	</body>
+</html>

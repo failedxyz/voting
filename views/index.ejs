@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>Create Poll</title>
+		<% include header %>
+	</head>
+	<body>
+		<div id="panel">
+			<h1>Create Poll</h1>
+			<form action="/create" method="POST" class="form-horizontal">
+				<p><input type="text" placeholder="Title" name="title" class="form-control" autocomplete="off" autofocus></p>
+				<p>Enter your options:</p>
+				<div id="options">
+					<div class="input-group">
+						<input type="text" placeholder="Option" name="options[]" class="form-control" autocomplete="off">
+						<span class="input-group-btn">
+							<button class="btn btn-danger" type="button" onclick="javascript:$(this).parent().parent().remove();"><i class="fa fa-trash"></i></button>
+						</span>
+					</div>
+				</div>
+				<p></p>
+				<p>
+					<a href="javascript:add_option();" class="btn btn-primary"><i class="fa fa-plus"></i> Add Option</a>
+					<button type="submit" class="btn btn-success">Create <i class="fa fa-arrow-right"></i></button>
+				</p>
+			</form>
+		</div>
+		<script>
+			var option = $("#options div").clone();
+			var add_option = function() {
+				option.appendTo("#options");
+				option = $("#options div:first-child").clone();
+				option.children(".form-control").val("");
+			}
+		</script>
+	</body>
+</html>
